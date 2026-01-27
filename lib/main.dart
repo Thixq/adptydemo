@@ -1,3 +1,4 @@
+import 'package:adptydemo/page/demo_page.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() {
@@ -12,14 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
-      home: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          middle: Text('Adapty Demo'),
-        ),
-        child: Center(
-          child: Text('Welcome to Adapty Demo App!'),
-        ),
-      ),
+      home: DemoPage(),
     );
   }
 }

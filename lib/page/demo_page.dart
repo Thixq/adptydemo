@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// A demo page widget.
@@ -12,6 +13,13 @@ class DemoPage extends StatefulWidget {
 class _DemoPageState extends State<DemoPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return const CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Adapty Demo'),
+      ),
+      child: Center(
+        child: Text('Welcome to Aaadapty Demo App!'),
+      ),
+    );
   }
 }
