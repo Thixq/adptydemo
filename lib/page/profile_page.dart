@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
+/// A profile page widget.
 class ProfilePage extends StatelessWidget {
+  /// Creates a [ProfilePage] instance.
   const ProfilePage({super.key});
 
   @override

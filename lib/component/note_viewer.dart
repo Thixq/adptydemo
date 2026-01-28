@@ -1,15 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:adptydemo/component/note_card.dart';
 import 'package:adptydemo/model/note_model.dart';
+import 'package:flutter/cupertino.dart';
 
+/// A widget that displays a list of notes.
 class NoteViewer extends StatelessWidget {
+  /// Creates a [NoteViewer] instance.
   const NoteViewer({
     required this.notes,
     super.key,
     this.onNoteTap,
   });
 
+  /// The list of notes to display.
   final List<Note> notes;
+
+  /// The callback to invoke when a note is tapped.
   final ValueChanged<Note>? onNoteTap;
 
   @override

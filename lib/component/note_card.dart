@@ -1,14 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:adptydemo/model/note_model.dart';
+import 'package:flutter/cupertino.dart';
 
+/// A card widget that displays a note.
 class NoteCard extends StatelessWidget {
+  /// Creates a [NoteCard] instance.
   const NoteCard({
     required this.note,
     super.key,
     this.onTap,
   });
 
+  /// The note to display.
   final Note note;
+
+  /// The callback to invoke when the card is tapped.
   final VoidCallback? onTap;
 
   @override

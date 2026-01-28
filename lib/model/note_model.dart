@@ -23,6 +23,7 @@ class Note {
   final String description;
 }
 
+/// A Hive adapter for the [Note] model.
 class NoteAdapter extends TypeAdapter<Note> {
   @override
   final int typeId = 0;
@@ -39,9 +40,10 @@ class NoteAdapter extends TypeAdapter<Note> {
 
   @override
   void write(BinaryWriter writer, Note obj) {
-    writer.write(obj.id);
-    writer.write(obj.createdAt.millisecondsSinceEpoch);
-    writer.write(obj.title);
-    writer.write(obj.description);
+    writer
+      ..write(obj.id)
+      ..write(obj.createdAt.millisecondsSinceEpoch)
+      ..write(obj.title)
+      ..write(obj.description);
   }
 }

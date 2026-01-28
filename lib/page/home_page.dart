@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:adptydemo/component/note_bottom_sheet.dart';
 import 'package:adptydemo/component/note_viewer.dart';
 import 'package:adptydemo/model/note_model.dart';
 import 'package:adptydemo/service/note_service.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 /// A home page widget.
 class HomePage extends StatefulWidget {

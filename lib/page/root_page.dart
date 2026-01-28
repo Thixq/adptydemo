@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:adptydemo/page/home_page.dart';
 import 'package:adptydemo/page/profile_page.dart';
+import 'package:flutter/cupertino.dart';
 
+/// The root page widget with tab navigation.
 class RootPage extends StatelessWidget {
+  /// Creates a [RootPage] instance.
   const RootPage({super.key});
 
   @override

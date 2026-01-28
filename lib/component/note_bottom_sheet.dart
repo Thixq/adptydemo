@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+/// A bottom sheet widget for creating or editing a note.
 class NoteBottomSheet extends StatefulWidget {
+  /// Creates a [NoteBottomSheet] instance.
   const NoteBottomSheet({super.key, this.note});
 
+  /// The note to be edited, or null if creating a new note.
   final Note? note;
 
   @override

@@ -9,3 +9,4 @@ analyzer:
   errors:
     lines_longer_than_80_chars: ignore
     duplicate_ignore: ignore
+    prefer_constructors_over_static_methods: ignore
