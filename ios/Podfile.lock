@@ -1,0 +1,60 @@
+PODS:
+  - Adapty (3.15.3):
+    - AdaptyLogger (= 3.15.3)
+    - AdaptyUIBuilder (= 3.15.3)
+  - adapty_flutter (3.15.3):
+    - Adapty (= 3.15.3)
+    - AdaptyPlugin (= 3.15.3)
+    - AdaptyUI (= 3.15.3)
+    - Flutter
+  - AdaptyLogger (3.15.3)
+  - AdaptyPlugin (3.15.3):
+    - Adapty (= 3.15.3)
+    - AdaptyLogger (= 3.15.3)
+    - AdaptyUI (= 3.15.3)
+    - AdaptyUIBuilder (= 3.15.3)
+  - AdaptyUI (3.15.3):
+    - Adapty (= 3.15.3)
+    - AdaptyLogger (= 3.15.3)
+    - AdaptyUIBuilder (= 3.15.3)
+  - AdaptyUIBuilder (3.15.3):
+    - AdaptyLogger (= 3.15.3)
+  - Flutter (1.0.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - adapty_flutter (from `.symlinks/plugins/adapty_flutter/ios`)
+  - Flutter (from `Flutter`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+
+SPEC REPOS:
+  trunk:
+    - Adapty
+    - AdaptyLogger
+    - AdaptyPlugin
+    - AdaptyUI
+    - AdaptyUIBuilder
+
+EXTERNAL SOURCES:
+  adapty_flutter:
+    :path: ".symlinks/plugins/adapty_flutter/ios"
+  Flutter:
+    :path: Flutter
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+
+SPEC CHECKSUMS:
+  Adapty: 9d5c8378ddf71747e5182ae9dd3426b2a4dc274a
+  adapty_flutter: ab36b0881c99caa05f4abc784817d21a62c702bc
+  AdaptyLogger: 8a58745fe27ac991d2b2f05de57bfa9d932383ca
+  AdaptyPlugin: d832e606563b2cc3e77dbc4ca23e64725a3b21c5
+  AdaptyUI: 7b8515dade06d8a046826f024940c009bedb5f00
+  AdaptyUIBuilder: e94ea218d936f58f13123fda19f3c13fba5cdb7d
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
+
+PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
+
+COCOAPODS: 1.16.2

@@ -1,7 +1,16 @@
-import 'package:adptydemo/page/demo_page.dart';
+import 'package:adapty_flutter/adapty_flutter.dart';
+import 'package:adptydemo/env/dev_env.dart';
+import 'package:adptydemo/page/root_page.dart';
+import 'package:adptydemo/service/adapty_service.dart';
+import 'package:adptydemo/service/note_service.dart';
 import 'package:flutter/cupertino.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NoteService().init();
+  await AdaptyService(adapty: Adapty()).initialize(
+    apiKey: DevEnv().adaptyApiKey,
+  );
   runApp(const MyApp());
 }
 
@@ -13,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const CupertinoApp(
-      home: DemoPage(),
+      home: RootPage(),
     );
   }
 }

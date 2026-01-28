@@ -28,7 +28,21 @@ final class AdaptyService {
       await _adapty.activate(
         configuration: AdaptyConfiguration(apiKey: apiKey),
       );
+    } on AdaptyError catch (e) {
+      if (e.code == 3005) {
+        debugPrint('AdaptyService: Adapty already activated.');
+      } else {
+        debugPrint(
+          'AdaptyService: Activation error: ${e.message} (${e.code})',
+        );
+        return;
+      }
+    } catch (e) {
+      debugPrint('AdaptyService: Unexpected activation error: $e');
+      return;
+    }
 
+    try {
       if (kDebugMode) {
         await _adapty.setLogLevel(AdaptyLogLevel.verbose);
       } else {
@@ -39,12 +53,8 @@ final class AdaptyService {
 
       await _checkInitialSubscriptionStatus();
       debugPrint('AdaptyService: Successfully initialized.');
-    } on AdaptyError catch (e) {
-      debugPrint(
-        'AdaptyService: Initialization error: ${e.message} (${e.code})',
-      );
     } catch (e) {
-      debugPrint('AdaptyService: Unexpected error: $e');
+      debugPrint('AdaptyService: Setup error: $e');
     }
   }
 
