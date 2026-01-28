@@ -8,14 +8,16 @@ import 'package:flutter/foundation.dart';
 /// A service class to manage Adapty SDK interactions.
 final class AdaptyService {
   /// Returns the singleton instance of [AdaptyService].
-  factory AdaptyService({required Adapty adapty}) => _instance(adapty: adapty);
+  factory AdaptyService({required Adapty adapty}) {
+    _singleton ??= AdaptyService._internal(adapty);
+    return _singleton!;
+  }
 
   AdaptyService._internal(this._adapty);
 
   final Adapty _adapty;
 
-  static AdaptyService _instance({required Adapty adapty}) =>
-      AdaptyService._internal(adapty);
+  static AdaptyService? _singleton;
 
   /// A notifier that indicates whether the user has premium access.
   final ValueNotifier<bool> isPremium = ValueNotifier(false);

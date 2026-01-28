@@ -76,17 +76,17 @@ class _NoteBottomSheetState extends State<NoteBottomSheet> {
                 children: [
                   CupertinoButton(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: const Text('Vazgeç'),
+                    child: const Text('Cancel'),
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Text(
-                    widget.note == null ? 'Yeni Not' : 'Notu Düzenle',
+                    widget.note == null ? 'New Note' : 'Edit Note',
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   CupertinoButton(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     onPressed: _onSave,
-                    child: const Text('Kaydet'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
@@ -98,7 +98,7 @@ class _NoteBottomSheetState extends State<NoteBottomSheet> {
                   children: [
                     CupertinoTextField(
                       controller: _titleController,
-                      placeholder: 'Not Başlığı',
+                      placeholder: 'Note Title',
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -120,7 +120,7 @@ class _NoteBottomSheetState extends State<NoteBottomSheet> {
                       const Padding(
                         padding: EdgeInsets.only(top: 4, left: 4),
                         child: Text(
-                          'Başlık alanı zorunludur',
+                          'Title is required',
                           style: TextStyle(
                             color: CupertinoColors.destructiveRed,
                             fontSize: 12,
@@ -130,7 +130,7 @@ class _NoteBottomSheetState extends State<NoteBottomSheet> {
                     const SizedBox(height: 16),
                     CupertinoTextField(
                       controller: _noteController,
-                      placeholder: 'Notunuz...',
+                      placeholder: 'Your Note...',
                       padding: const EdgeInsets.all(12),
                       minLines: 3,
                       maxLines: 8,
