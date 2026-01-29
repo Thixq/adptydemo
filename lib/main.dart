@@ -1,7 +1,7 @@
 import 'package:adptydemo/env/dev_env.dart';
 import 'package:adptydemo/locator.dart';
 import 'package:adptydemo/page/root_page.dart';
-import 'package:adptydemo/service_and_managers/adapty_service.dart';
+import 'package:adptydemo/service_and_managers/adapty_manager.dart';
 import 'package:adptydemo/service_and_managers/note_db_service.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,7 +9,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
   await locator<NoteDBService>().init();
-  await locator<AdaptyService>().initialize(
+  await locator<AdaptyManager>().initialize(
     apiKey: DevEnv().adaptyApiKey,
   );
   runApp(const MyApp());

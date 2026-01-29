@@ -1,5 +1,5 @@
 import 'package:adapty_flutter/adapty_flutter.dart';
-import 'package:adptydemo/service_and_managers/adapty_service.dart';
+import 'package:adptydemo/service_and_managers/adapty_manager.dart';
 import 'package:adptydemo/service_and_managers/note_db_service.dart';
 import 'package:adptydemo/service_and_managers/note_manager.dart';
 import 'package:adptydemo/service_and_managers/user_profile_manager.dart';
@@ -11,8 +11,8 @@ final GetIt locator = GetIt.instance;
 /// Sets up the service locator with necessary services.
 void setupLocator() {
   locator
-    ..registerLazySingleton<AdaptyService>(
-      () => AdaptyService(adapty: Adapty()),
+    ..registerLazySingleton<AdaptyManager>(
+      () => AdaptyManager(adapty: Adapty()),
     )
     ..registerLazySingleton<NoteDBService>(NoteDBService.new)
     ..registerLazySingleton<UserProfileManager>(UserProfileManager.new)

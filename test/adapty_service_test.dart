@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:adapty_flutter/adapty_flutter.dart';
-import 'package:adptydemo/service_and_managers/adapty_service.dart';
+import 'package:adptydemo/service_and_managers/adapty_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -15,11 +15,11 @@ import 'adapty_service_test.mocks.dart';
 
 void main() {
   late MockAdapty mockAdapty;
-  late AdaptyService adaptyService;
+  late AdaptyManager adaptyService;
 
   setUp(() {
     mockAdapty = MockAdapty();
-    adaptyService = AdaptyService(adapty: mockAdapty);
+    adaptyService = AdaptyManager(adapty: mockAdapty);
   });
 
   group('AdaptyService Tests', () {

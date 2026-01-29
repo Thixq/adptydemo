@@ -6,9 +6,9 @@ import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:flutter/foundation.dart';
 
 /// A service class to manage Adapty SDK interactions.
-final class AdaptyService {
-  /// Creates an instance of [AdaptyService].
-  AdaptyService({required Adapty adapty}) : _adapty = adapty;
+final class AdaptyManager {
+  /// Creates an instance of [AdaptyManager].
+  AdaptyManager({required Adapty adapty}) : _adapty = adapty;
 
   final Adapty _adapty;
 
@@ -25,15 +25,15 @@ final class AdaptyService {
       );
     } on AdaptyError catch (e) {
       if (e.code == 3005) {
-        debugPrint('AdaptyService: Adapty already activated.');
+        debugPrint('AdaptyManager: Adapty already activated.');
       } else {
         debugPrint(
-          'AdaptyService: Activation error: ${e.message} (${e.code})',
+          'AdaptyManager: Activation error: ${e.message} (${e.code})',
         );
         return;
       }
     } catch (e) {
-      debugPrint('AdaptyService: Unexpected activation error: $e');
+      debugPrint('AdaptyManager: Unexpected activation error: $e');
       return;
     }
 
@@ -47,9 +47,9 @@ final class AdaptyService {
       await _setupProfileListener();
 
       await _checkInitialSubscriptionStatus();
-      debugPrint('AdaptyService: Successfully initialized.');
+      debugPrint('AdaptyManager: Successfully initialized.');
     } catch (e) {
-      debugPrint('AdaptyService: Setup error: $e');
+      debugPrint('AdaptyManager: Setup error: $e');
     }
   }
 
@@ -57,7 +57,7 @@ final class AdaptyService {
   Future<void> _setupProfileListener() async {
     await _profileSubscription?.cancel();
     _profileSubscription = _adapty.didUpdateProfileStream.listen((profile) {
-      debugPrint('AdaptyService: Profile update received.');
+      debugPrint('AdaptyManager: Profile update received.');
       _updatePremiumStatus(profile);
     });
   }
@@ -68,7 +68,7 @@ final class AdaptyService {
       final profile = await _adapty.getProfile();
       _updatePremiumStatus(profile);
     } on AdaptyError catch (e) {
-      debugPrint('AdaptyService: Profile fetch error: ${e.message}');
+      debugPrint('AdaptyManager: Profile fetch error: ${e.message}');
     }
   }
 
@@ -80,7 +80,7 @@ final class AdaptyService {
 
     if (isPremium.value != isActive) {
       isPremium.value = isActive;
-      debugPrint('AdaptyService: Premium status updated: $isActive');
+      debugPrint('AdaptyManager: Premium status updated: $isActive');
     }
   }
 
@@ -93,15 +93,37 @@ final class AdaptyService {
       final products = await _adapty.getPaywallProducts(paywall: paywall);
       return products;
     } on AdaptyError catch (e) {
-      debugPrint('AdaptyService: Get product error: ${e.message}');
+      debugPrint('AdaptyManager: Get product error: ${e.message}');
       return null;
     } catch (e) {
-      debugPrint('AdaptyService: Unexpected get product error: $e');
+      debugPrint('AdaptyManager: Unexpected get product error: $e');
       return null;
     }
   }
 
-  /// Disposes resources used by the AdaptyService.
+  /// Initiates a purchase for the given [product].
+  Future<void> makePurchase(AdaptyPaywallProduct product) async {
+    try {
+      final result = await _adapty.makePurchase(product: product);
+
+      switch (result) {
+        case final AdaptyPurchaseResultSuccess success:
+          _updatePremiumStatus(success.profile);
+        case AdaptyPurchaseResultUserCancelled():
+          debugPrint('AdaptyManager: User cancelled purchase.');
+        case AdaptyPurchaseResultPending():
+          debugPrint('AdaptyManager: Purchase pending.');
+      }
+    } on AdaptyError catch (e) {
+      debugPrint('AdaptyManager: Purchase error: ${e.message}');
+      rethrow;
+    } catch (e) {
+      debugPrint('AdaptyManager: Unexpected purchase error: $e');
+      rethrow;
+    }
+  }
+
+  /// Disposes resources used by the AdaptyManager.
   Future<void> dispose() async {
     await _profileSubscription?.cancel();
     isPremium.dispose();

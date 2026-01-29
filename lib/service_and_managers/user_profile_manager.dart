@@ -1,6 +1,6 @@
 import 'package:adptydemo/locator.dart';
 import 'package:adptydemo/model/user_profile.dart';
-import 'package:adptydemo/service_and_managers/adapty_service.dart';
+import 'package:adptydemo/service_and_managers/adapty_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
@@ -12,7 +12,7 @@ class UserProfileManager extends ChangeNotifier {
   }
 
   late UserProfile _currentUser;
-  final AdaptyService _adaptyService = locator<AdaptyService>();
+  final AdaptyManager _adaptyService = locator<AdaptyManager>();
 
   /// The current user profile.
   UserProfile get currentUser => _currentUser;
