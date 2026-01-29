@@ -7,17 +7,10 @@ import 'package:flutter/foundation.dart';
 
 /// A service class to manage Adapty SDK interactions.
 final class AdaptyService {
-  /// Returns the singleton instance of [AdaptyService].
-  factory AdaptyService({required Adapty adapty}) {
-    _singleton ??= AdaptyService._internal(adapty);
-    return _singleton!;
-  }
-
-  AdaptyService._internal(this._adapty);
+  /// Creates an instance of [AdaptyService].
+  AdaptyService({required Adapty adapty}) : _adapty = adapty;
 
   final Adapty _adapty;
-
-  static AdaptyService? _singleton;
 
   /// A notifier that indicates whether the user has premium access.
   final ValueNotifier<bool> isPremium = ValueNotifier(false);
@@ -88,6 +81,23 @@ final class AdaptyService {
     if (isPremium.value != isActive) {
       isPremium.value = isActive;
       debugPrint('AdaptyService: Premium status updated: $isActive');
+    }
+  }
+
+  /// Fetches the product information for the given [placementId].
+  Future<List<AdaptyPaywallProduct>?> getProduct({
+    required String placementId,
+  }) async {
+    try {
+      final paywall = await _adapty.getPaywall(placementId: placementId);
+      final products = await _adapty.getPaywallProducts(paywall: paywall);
+      return products;
+    } on AdaptyError catch (e) {
+      debugPrint('AdaptyService: Get product error: ${e.message}');
+      return null;
+    } catch (e) {
+      debugPrint('AdaptyService: Unexpected get product error: $e');
+      return null;
     }
   }
 

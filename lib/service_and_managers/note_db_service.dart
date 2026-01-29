@@ -3,13 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 /// A service class for managing notes using Hive database.
-class NoteService {
-  /// Returns the singleton instance of [NoteService].
-  factory NoteService() => _instance;
-  NoteService._internal();
+class NoteDBService {
   static const String _boxName = 'notes';
-
-  static final NoteService _instance = NoteService._internal();
 
   Box<Note>? _box;
 
