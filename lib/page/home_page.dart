@@ -1,7 +1,7 @@
 import 'package:adptydemo/component/note_bottom_sheet.dart';
 import 'package:adptydemo/component/note_viewer.dart';
 import 'package:adptydemo/model/note_model.dart';
-import 'package:adptydemo/service/note_service.dart';
+import 'package:adptydemo/service_and_managers/note_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       child: ValueListenableBuilder<Box<Note>>(
-        valueListenable: NoteService().listenable,
+        valueListenable: NoteManager().listenable,
         builder: (context, box, _) {
           final notes = box.values.toList().cast<Note>();
           return SafeArea(

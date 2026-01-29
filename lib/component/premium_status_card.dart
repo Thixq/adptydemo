@@ -1,21 +1,24 @@
-import 'package:adapty_flutter/adapty_flutter.dart';
-import 'package:adptydemo/service/adapty_service.dart';
+import 'package:adptydemo/locator.dart';
+import 'package:adptydemo/service_and_managers/user_profile_manager.dart';
 import 'package:flutter/cupertino.dart';
 
+/// A card widget that displays the user's premium status.
 class PremiumStatusCard extends StatelessWidget {
+  /// Creates a [PremiumStatusCard] instance.
   const PremiumStatusCard({super.key});
 
   @override
   Widget build(BuildContext context) {
     final theme = CupertinoTheme.of(context);
 
-    // We can safely pass a new Adapty instance here because the service is a singleton
-    // and will return the existing instance.
-    final adaptyService = AdaptyService(adapty: Adapty());
+    final userProfileManager = locator<UserProfileManager>();
 
-    return ValueListenableBuilder<bool>(
-      valueListenable: adaptyService.isPremium,
-      builder: (context, isPremium, child) {
+    return AnimatedBuilder(
+      animation: userProfileManager,
+      builder: (context, _) {
+        final isPremium =
+            userProfileManager.currentUser.subscriptionType.isPremium;
+
         final backgroundColor = isPremium
             ? CupertinoColors.activeGreen.resolveFrom(context).withOpacity(0.1)
             : CupertinoColors.systemOrange

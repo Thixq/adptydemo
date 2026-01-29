@@ -1,5 +1,5 @@
 import 'package:adptydemo/model/note_model.dart';
-import 'package:adptydemo/service/note_service.dart';
+import 'package:adptydemo/service_and_managers/note_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
@@ -51,10 +51,32 @@ class _NoteBottomSheetState extends State<NoteBottomSheet> {
       description: _noteController.text.trim(),
     );
 
-    await NoteService().addNote(note);
+    try {
+      if (widget.note != null) {
+        await NoteManager().updateNote(note);
+      } else {
+        await NoteManager().createNote(note);
+      }
 
-    if (mounted) {
-      Navigator.of(context).pop();
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        await showCupertinoDialog<void>(
+          context: context,
+          builder: (context) => CupertinoAlertDialog(
+            title: const Text('Limit Reached'),
+            content: Text(e.toString().replaceAll('Exception: ', '')),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('OK'),
+                onPressed: () => Navigator.pop(context),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
