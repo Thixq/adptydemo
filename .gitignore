@@ -47,3 +47,4 @@ app.*.map.json
 # Project specific
 assets/env/
 lib/env/dev_env.g.dart
+*.p8
