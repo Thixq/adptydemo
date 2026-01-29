@@ -22,7 +22,7 @@ class NoteViewer extends StatelessWidget {
     if (notes.isEmpty) {
       return const Center(
         child: Text(
-          'Henüz not eklenmedi.',
+          'No notes added yet.',
           style: TextStyle(
             color: CupertinoColors.secondaryLabel,
           ),
