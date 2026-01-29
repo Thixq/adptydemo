@@ -94,8 +94,8 @@ class PremiumStatusCard extends StatelessWidget {
         if (isPremium) return card;
 
         return GestureDetector(
-          onTap: () {
-            showCupertinoModalPopup<void>(
+          onTap: () async {
+            await showCupertinoModalPopup<void>(
               context: context,
               builder: (context) => const PaywallSheet(),
             );

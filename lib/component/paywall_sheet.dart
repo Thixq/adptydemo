@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:adapty_flutter/adapty_flutter.dart';
 import 'package:adptydemo/locator.dart';
 import 'package:adptydemo/service_and_managers/adapty_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 
 /// A bottom sheet widget that displays the paywall and allows purchasing products.
 class PaywallSheet extends StatefulWidget {
@@ -23,7 +24,7 @@ class _PaywallSheetState extends State<PaywallSheet> {
   @override
   void initState() {
     super.initState();
-    _loadProducts();
+    unawaited(_loadProducts());
   }
 
   Future<void> _loadProducts() async {
