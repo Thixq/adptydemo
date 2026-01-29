@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 
 /// A model class representing a Note.
-class Note {
+final class Note {
   /// Creates a [Note] instance.
   Note({
     required this.id,
@@ -24,7 +24,7 @@ class Note {
 }
 
 /// A Hive adapter for the [Note] model.
-class NoteAdapter extends TypeAdapter<Note> {
+final class NoteAdapter extends TypeAdapter<Note> {
   @override
   final int typeId = 0;
 
