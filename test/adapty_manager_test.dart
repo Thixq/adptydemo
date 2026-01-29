@@ -10,16 +10,25 @@ import 'package:mockito/mockito.dart';
   MockSpec<Adapty>(),
   MockSpec<AdaptyProfile>(),
   MockSpec<AdaptyAccessLevel>(),
+  MockSpec<AdaptyPaywall>(),
+  MockSpec<AdaptyPaywallProduct>(),
+  MockSpec<AdaptyPurchaseResultPending>(),
+  MockSpec<AdaptyPurchaseResultUserCancelled>(),
+  MockSpec<AdaptyPurchaseResultSuccess>(),
 ])
-import 'adapty_service_test.mocks.dart';
+import 'adapty_manager_test.mocks.dart';
 
 void main() {
   late MockAdapty mockAdapty;
-  late AdaptyManager adaptyService;
+  late AdaptyManager adaptyManager;
+
+  setUpAll(() {
+    provideDummy<AdaptyPurchaseResult>(AdaptyPurchaseResultUserCancelled());
+  });
 
   setUp(() {
     mockAdapty = MockAdapty();
-    adaptyService = AdaptyManager(adapty: mockAdapty);
+    adaptyManager = AdaptyManager(adapty: mockAdapty);
   });
 
   group('AdaptyService Tests', () {
@@ -35,7 +44,7 @@ void main() {
 
         // 3. Assert
         expect(
-          adaptyService.isPremium.value,
+          adaptyManager.isPremium.value,
           isFalse,
           reason:
               'Premium access should be disabled when service first initializes.',
@@ -48,8 +57,12 @@ void main() {
       const apiKey = 'test_api_key';
       when(
         mockAdapty.activate(configuration: anyNamed('configuration')),
-      ).thenAnswer((_) async {});
-      when(mockAdapty.setLogLevel(any)).thenAnswer((_) async {});
+      ).thenAnswer((_) async {
+        return;
+      });
+      when(mockAdapty.setLogLevel(any)).thenAnswer((_) async {
+        return;
+      });
       when(
         mockAdapty.getProfile(),
       ).thenThrow(const AdaptyError('Profile error', 0, null));
@@ -58,7 +71,7 @@ void main() {
       ).thenAnswer((_) => const Stream.empty());
 
       // Act
-      await adaptyService.initialize(apiKey: apiKey);
+      await adaptyManager.initialize(apiKey: apiKey);
 
       // Assert
       verify(
@@ -78,11 +91,11 @@ void main() {
       ).thenAnswer((_) => const Stream.empty());
 
       // 2. Act
-      await adaptyService.initialize(apiKey: 'test_key');
+      await adaptyManager.initialize(apiKey: 'test_key');
 
       // 3. Assert
       expect(
-        adaptyService.isPremium.value,
+        adaptyManager.isPremium.value,
         isFalse,
         reason: 'Access should be denied if no premium key exists.',
       );
@@ -93,7 +106,7 @@ void main() {
       () async {
         // 1. Arrange: Manually set service to "true" (independent of other tests)
         // Note: isPremium is final, so we modify its value.
-        adaptyService.isPremium.value = true;
+        adaptyManager.isPremium.value = true;
 
         final mockProfile = MockAdaptyProfile();
         when(mockProfile.accessLevels).thenReturn({
@@ -107,11 +120,11 @@ void main() {
         ).thenAnswer((_) => const Stream.empty());
 
         // 2. Act
-        await adaptyService.initialize(apiKey: 'test_key');
+        await adaptyManager.initialize(apiKey: 'test_key');
 
         // 3. Assert: The value that was true should now be false
         expect(
-          adaptyService.isPremium.value,
+          adaptyManager.isPremium.value,
           isFalse,
           reason:
               'Status should be false if premium key is missing in new data.',
@@ -134,10 +147,10 @@ void main() {
         ).thenAnswer((_) => const Stream.empty());
 
         // Act
-        await adaptyService.initialize(apiKey: 'key');
+        await adaptyManager.initialize(apiKey: 'key');
 
         // Assert
-        expect(adaptyService.isPremium.value, isTrue);
+        expect(adaptyManager.isPremium.value, isTrue);
       },
     );
 
@@ -156,10 +169,10 @@ void main() {
         ).thenAnswer((_) => const Stream.empty());
 
         // Act
-        await adaptyService.initialize(apiKey: 'key');
+        await adaptyManager.initialize(apiKey: 'key');
 
         // Assert
-        expect(adaptyService.isPremium.value, isFalse);
+        expect(adaptyManager.isPremium.value, isFalse);
       },
     );
 
@@ -181,13 +194,13 @@ void main() {
       ).thenAnswer((_) => Stream.value(mockProfile));
 
       // Act
-      await adaptyService.initialize(apiKey: 'key');
+      await adaptyManager.initialize(apiKey: 'key');
 
       // Wait for stream to emit
       await Future<void>.delayed(Duration.zero);
 
       // Assert
-      expect(adaptyService.isPremium.value, isTrue);
+      expect(adaptyManager.isPremium.value, isTrue);
     });
 
     test('handles errors gracefully during initialization', () async {
@@ -199,7 +212,7 @@ void main() {
       // Act & Assert
       // Should not throw
       await expectLater(
-        adaptyService.initialize(apiKey: 'key'),
+        adaptyManager.initialize(apiKey: 'key'),
         completes,
       );
     });
@@ -222,10 +235,12 @@ void main() {
       ).thenAnswer((_) async => MockAdaptyProfile());
       when(
         mockAdapty.activate(configuration: anyNamed('configuration')),
-      ).thenAnswer((_) async {});
+      ).thenAnswer((_) async {
+        return;
+      });
 
       // 2. Act - First Call
-      await adaptyService.initialize(apiKey: 'test_key');
+      await adaptyManager.initialize(apiKey: 'test_key');
 
       // Validation: controller1 should be listened to now.
       expect(
@@ -240,7 +255,7 @@ void main() {
         mockAdapty.didUpdateProfileStream,
       ).thenAnswer((_) => controller2.stream);
 
-      await adaptyService.initialize(apiKey: 'test_key');
+      await adaptyManager.initialize(apiKey: 'test_key');
 
       // 4. Assert
       // If `await _profileSubscription?.cancel();` inside the code worked,
@@ -261,4 +276,109 @@ void main() {
       await controller2.close();
     },
   );
+
+  group('AdaptyManager Product & Purchase Tests', () {
+    test('getProduct returns products on success', () async {
+      // Arrange
+      const placementId = 'test_placement';
+      final mockPaywall = MockAdaptyPaywall();
+      final mockProduct = MockAdaptyPaywallProduct();
+
+      when(
+        mockAdapty.getPaywall(placementId: placementId),
+      ).thenAnswer((_) async => mockPaywall);
+      when(
+        mockAdapty.getPaywallProducts(paywall: mockPaywall),
+      ).thenAnswer((_) async => [mockProduct]);
+
+      // Act
+      final products = await adaptyManager.getProduct(placementId: placementId);
+
+      // Assert
+      expect(products, isNotNull);
+      expect(products!.length, 1);
+      expect(products.first, mockProduct);
+    });
+
+    test('getProduct returns null on error', () async {
+      // Arrange
+      const placementId = 'test_placement';
+      when(
+        mockAdapty.getPaywall(placementId: placementId),
+      ).thenThrow(const AdaptyError('error', 0, null));
+
+      // Act
+      final products = await adaptyManager.getProduct(placementId: placementId);
+
+      // Assert
+      expect(products, isNull);
+    });
+
+    test('makePurchase updates status on success', () async {
+      // Arrange
+      final mockProduct = MockAdaptyPaywallProduct();
+      final mockResult = MockAdaptyPurchaseResultSuccess();
+      final mockProfile = MockAdaptyProfile();
+      final mockAccessLevel = MockAdaptyAccessLevel();
+
+      when(mockAccessLevel.isActive).thenReturn(true);
+      when(mockProfile.accessLevels).thenReturn({'premium': mockAccessLevel});
+      when(mockResult.profile).thenReturn(mockProfile);
+
+      when(
+        mockAdapty.makePurchase(product: mockProduct),
+      ).thenAnswer((_) async => mockResult);
+
+      // Act
+      await adaptyManager.makePurchase(mockProduct);
+
+      // Assert
+      expect(adaptyManager.isPremium.value, isTrue);
+    });
+
+    test('makePurchase handles user cancellation', () async {
+      // Arrange
+      final mockProduct = MockAdaptyPaywallProduct();
+
+      when(
+        mockAdapty.makePurchase(product: mockProduct),
+      ).thenAnswer((_) async => AdaptyPurchaseResultUserCancelled());
+
+      // Act
+      await adaptyManager.makePurchase(mockProduct);
+
+      // Assert
+      expect(adaptyManager.isPremium.value, isFalse);
+    });
+
+    test('makePurchase handles pending', () async {
+      // Arrange
+      final mockProduct = MockAdaptyPaywallProduct();
+
+      when(
+        mockAdapty.makePurchase(product: mockProduct),
+      ).thenAnswer((_) async => AdaptyPurchaseResultPending());
+
+      // Act
+      await adaptyManager.makePurchase(mockProduct);
+
+      // Assert
+      expect(adaptyManager.isPremium.value, isFalse);
+    });
+
+    test('makePurchase rethrows error', () async {
+      // Arrange
+      final mockProduct = MockAdaptyPaywallProduct();
+
+      when(
+        mockAdapty.makePurchase(product: mockProduct),
+      ).thenThrow(const AdaptyError('error', 0, null));
+
+      // Act & Assert
+      expect(
+        () => adaptyManager.makePurchase(mockProduct),
+        throwsA(isA<AdaptyError>()),
+      );
+    });
+  });
 }
