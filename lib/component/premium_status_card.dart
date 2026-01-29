@@ -1,3 +1,4 @@
+import 'package:adptydemo/component/paywall_sheet.dart';
 import 'package:adptydemo/locator.dart';
 import 'package:adptydemo/service_and_managers/user_profile_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -30,11 +31,12 @@ class PremiumStatusCard extends StatelessWidget {
             : CupertinoColors.systemOrange.resolveFrom(context);
 
         final title = isPremium ? 'Premium Active' : 'Free Plan';
+        // Add CTA if not premium
         final description = isPremium
             ? 'You have full access to all features.'
-            : 'Upgrade to Premium to unlock all features.';
+            : 'Upgrade to Premium to unlock all features. Tap to view plans.';
 
-        return Container(
+        final card = Container(
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -49,7 +51,7 @@ class PremiumStatusCard extends StatelessWidget {
               Icon(
                 isPremium
                     ? CupertinoIcons.check_mark_circled_solid
-                    : CupertinoIcons.info_circle_fill,
+                    : CupertinoIcons.star_fill, // Changed icon for free plan
                 color: iconColor,
                 size: 32,
               ),
@@ -77,8 +79,28 @@ class PremiumStatusCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (!isPremium) ...[
+                const SizedBox(width: 8),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  color: iconColor.withOpacity(0.5),
+                  size: 16,
+                ),
+              ],
             ],
           ),
+        );
+
+        if (isPremium) return card;
+
+        return GestureDetector(
+          onTap: () {
+            showCupertinoModalPopup<void>(
+              context: context,
+              builder: (context) => const PaywallSheet(),
+            );
+          },
+          child: card,
         );
       },
     );
